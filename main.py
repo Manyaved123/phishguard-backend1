@@ -4,8 +4,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from similarity_scan import compare_with_references
 import joblib
 
-from image_match import analyze_image
-from clip_scan import analyze_clip
+#from image_match import analyze_image
+#from clip_scan import analyze_clip
 
 app = FastAPI()
 
@@ -90,32 +90,10 @@ def scan_text(data: TextRequest):
 
 
 # ---------------- IMAGE MODEL ----------------
-@app.post("/scan-text")
-def scan_text(data: TextRequest):
-    text = data.text.strip()
-
-    pred = text_model.predict([text])[0]
-    prob = text_model.predict_proba([text])[0]
-
-    phishing_conf = round(float(prob[1]) * 100, 2)
-
-    if pred == 1:
-        verdict = "High Risk"
-        score = max(75, int(phishing_conf))
-        reasons = [
-            "Advanced NLP model detected phishing intent",
-            f"Confidence: {phishing_conf}%"
-        ]
-    else:
-        verdict = "Low Risk"
-        score = min(25, int(100 - phishing_conf))
-        reasons = [
-            "Message appears safer",
-            f"Confidence: {round(100 - phishing_conf,2)}%"
-        ]
-
+@app.post("/scan-image")
+def scan_image():
     return {
-        "risk_score": score,
-        "verdict": verdict,
-        "reasons": reasons
+        "risk_score": 45,
+        "verdict": "Medium Risk",
+        "reasons": ["Image scanning module temporarily simplified for deployment"]
     }
